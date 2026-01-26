@@ -5,7 +5,13 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 
-interface RoundedRectangularShape : Shape {
+sealed interface RoundedRectangularShape : Shape {
 
     fun cornerRadii(size: Size, layoutDirection: LayoutDirection, density: Density): FloatArray
+
+    fun lerp(to: RoundedRectangularShape, fraction: Float): RoundedRectangularShape
+}
+
+fun lerp(start: RoundedRectangularShape, stop: RoundedRectangularShape, fraction: Float): RoundedRectangularShape {
+    return start.lerp(stop, fraction)
 }

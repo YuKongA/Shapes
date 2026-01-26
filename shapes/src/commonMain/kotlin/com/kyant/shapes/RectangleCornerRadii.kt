@@ -1,5 +1,6 @@
 package com.kyant.shapes
 
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 
@@ -11,19 +12,49 @@ data class RectangleCornerRadii(
     val rtlAware: Boolean = true
 ) {
 
-    context(layoutDirection: LayoutDirection, density: Density)
+    constructor(all: CornerRadius, rtlAware: Boolean = true) : this(
+        topStart = all,
+        topEnd = all,
+        bottomEnd = all,
+        bottomStart = all,
+        rtlAware = rtlAware
+    )
+
+    context(size: Size, layoutDirection: LayoutDirection, density: Density)
     val topLeft: Float
         get() = if (!rtlAware || layoutDirection == LayoutDirection.Ltr) topStart.toPx() else topEnd.toPx()
 
-    context(layoutDirection: LayoutDirection, density: Density)
+    context(size: Size, layoutDirection: LayoutDirection, density: Density)
     val topRight: Float
         get() = if (!rtlAware || layoutDirection == LayoutDirection.Ltr) topEnd.toPx() else topStart.toPx()
 
-    context(layoutDirection: LayoutDirection, density: Density)
+    context(size: Size, layoutDirection: LayoutDirection, density: Density)
     val bottomRight: Float
         get() = if (!rtlAware || layoutDirection == LayoutDirection.Ltr) bottomEnd.toPx() else bottomStart.toPx()
 
-    context(layoutDirection: LayoutDirection, density: Density)
+    context(size: Size, layoutDirection: LayoutDirection, density: Density)
     val bottomLeft: Float
         get() = if (!rtlAware || layoutDirection == LayoutDirection.Ltr) bottomStart.toPx() else bottomEnd.toPx()
+
+    companion object {
+
+        val Zero = RectangleCornerRadii()
+
+        val Max =
+            RectangleCornerRadii(
+                topStart = CornerRadius.Max,
+                topEnd = CornerRadius.Max,
+                bottomEnd = CornerRadius.Max,
+                bottomStart = CornerRadius.Max
+            )
+    }
 }
+
+fun lerp(start: RectangleCornerRadii, stop: RectangleCornerRadii, fraction: Float) =
+    RectangleCornerRadii(
+        topStart = lerp(start.topStart, stop.topStart, fraction),
+        topEnd = lerp(start.topEnd, stop.topEnd, fraction),
+        bottomEnd = lerp(start.bottomEnd, stop.bottomEnd, fraction),
+        bottomStart = lerp(start.bottomStart, stop.bottomStart, fraction),
+        rtlAware = stop.rtlAware
+    )

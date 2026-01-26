@@ -23,6 +23,13 @@ data class CapsuleShape internal constructor(
         return FloatArray(4) { cornerRadiusPx }
     }
 
+    override fun lerp(to: RoundedRectangularShape, fraction: Float): RoundedRectangularShape {
+        return when (to) {
+            is CapsuleShape -> this
+            else -> to.lerp(this, 1f - fraction)
+        }
+    }
+
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
         val cornerRadiusPx = size.minDimension * 0.5f
         return style.createOutline(

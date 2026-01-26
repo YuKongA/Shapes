@@ -12,6 +12,26 @@ data object Rectangle : RoundedRectangularShape {
         return FloatArray(4)
     }
 
+    override fun lerp(to: RoundedRectangularShape, fraction: Float): RoundedRectangularShape {
+        return when (to) {
+            is Rectangle -> this
+            is RoundedRectangle -> RoundedRectangle(
+                cornerRadius = lerp(CornerRadius.Zero, to.cornerRadius, fraction),
+                style = to.style
+            )
+
+            is UnevenRoundedRectangle -> UnevenRoundedRectangle(
+                cornerRadii = lerp(RectangleCornerRadii.Zero, to.cornerRadii, fraction),
+                style = to.style
+            )
+
+            is CapsuleShape -> RoundedRectangle(
+                cornerRadius = lerp(CornerRadius.Zero, CornerRadius.Max, fraction),
+                style = to.style
+            )
+        }
+    }
+
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
         return Outline.Rectangle(
             Rect(

@@ -31,12 +31,33 @@ data class RoundedRectangle(
 ) : RoundedRectangularShape {
 
     override fun cornerRadii(size: Size, layoutDirection: LayoutDirection, density: Density): FloatArray {
-        val cornerRadiusPx = context(density) { cornerRadius.toPx() }
+        val cornerRadiusPx = context(size, density) { cornerRadius.toPx() }
         return FloatArray(4) { cornerRadiusPx }
     }
 
+    override fun lerp(to: RoundedRectangularShape, fraction: Float): RoundedRectangularShape {
+        return when (to) {
+            is RoundedRectangle -> RoundedRectangle(
+                cornerRadius = lerp(this.cornerRadius, to.cornerRadius, fraction),
+                style = to.style
+            )
+
+            is UnevenRoundedRectangle -> UnevenRoundedRectangle(
+                cornerRadii = lerp(RectangleCornerRadii(this.cornerRadius), to.cornerRadii, fraction),
+                style = to.style
+            )
+
+            is CapsuleShape -> RoundedRectangle(
+                cornerRadius = lerp(this.cornerRadius, CornerRadius.Max, fraction),
+                style = to.style
+            )
+
+            else -> to.lerp(this, 1f - fraction)
+        }
+    }
+
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
-        val cornerRadiusPx = context(density) { cornerRadius.toPx() }
+        val cornerRadiusPx = context(size, density) { cornerRadius.toPx() }
 
         if (cornerRadiusPx <= 0f) {
             return Outline.Rectangle(

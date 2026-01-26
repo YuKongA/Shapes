@@ -73,7 +73,7 @@ data class UnevenRoundedRectangle(
 ) : RoundedRectangularShape {
 
     override fun cornerRadii(size: Size, layoutDirection: LayoutDirection, density: Density): FloatArray {
-        return context(layoutDirection, density) {
+        return context(size, layoutDirection, density) {
             floatArrayOf(
                 cornerRadii.topLeft,
                 cornerRadii.topRight,
@@ -83,8 +83,24 @@ data class UnevenRoundedRectangle(
         }
     }
 
+    override fun lerp(to: RoundedRectangularShape, fraction: Float): RoundedRectangularShape {
+        return when (to) {
+            is UnevenRoundedRectangle -> UnevenRoundedRectangle(
+                cornerRadii = lerp(this.cornerRadii, to.cornerRadii, fraction),
+                style = to.style
+            )
+
+            is CapsuleShape -> UnevenRoundedRectangle(
+                cornerRadii = lerp(this.cornerRadii, RectangleCornerRadii.Max, fraction),
+                style = to.style
+            )
+
+            else -> to.lerp(this, 1f - fraction)
+        }
+    }
+
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
-        return context(layoutDirection, density) {
+        return context(size, layoutDirection, density) {
             style.createOutline(
                 size = size,
                 topLeft = cornerRadii.topLeft,
