@@ -45,7 +45,7 @@ mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
 
-    coordinates("io.github.kyant0", "shapes", "1.0.3")
+    coordinates("io.github.kyant0", "shapes", "1.0.4")
 
     pom {
         name.set("Shapes")

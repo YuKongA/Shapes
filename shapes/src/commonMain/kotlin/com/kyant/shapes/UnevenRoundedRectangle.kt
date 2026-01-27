@@ -6,6 +6,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastCoerceIn
 
 @Suppress("FunctionName")
 fun RoundedRectangle(
@@ -73,12 +74,13 @@ data class UnevenRoundedRectangle(
 ) : RoundedRectangularShape {
 
     override fun cornerRadii(size: Size, layoutDirection: LayoutDirection, density: Density): FloatArray {
+        val maxRadius = size.minDimension * 0.5f
         return context(size, layoutDirection, density) {
             floatArrayOf(
-                cornerRadii.topLeft,
-                cornerRadii.topRight,
-                cornerRadii.bottomRight,
-                cornerRadii.bottomLeft
+                cornerRadii.topLeft.fastCoerceIn(0f, maxRadius),
+                cornerRadii.topRight.fastCoerceIn(0f, maxRadius),
+                cornerRadii.bottomRight.fastCoerceIn(0f, maxRadius),
+                cornerRadii.bottomLeft.fastCoerceIn(0f, maxRadius)
             )
         }
     }
@@ -100,13 +102,14 @@ data class UnevenRoundedRectangle(
     }
 
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
+        val maxRadius = size.minDimension * 0.5f
         return context(size, layoutDirection, density) {
             style.createOutline(
                 size = size,
-                topLeft = cornerRadii.topLeft,
-                topRight = cornerRadii.topRight,
-                bottomRight = cornerRadii.bottomRight,
-                bottomLeft = cornerRadii.bottomLeft
+                topLeft = cornerRadii.topLeft.fastCoerceIn(0f, maxRadius),
+                topRight = cornerRadii.topRight.fastCoerceIn(0f, maxRadius),
+                bottomRight = cornerRadii.bottomRight.fastCoerceIn(0f, maxRadius),
+                bottomLeft = cornerRadii.bottomLeft.fastCoerceIn(0f, maxRadius)
             )
         }
     }

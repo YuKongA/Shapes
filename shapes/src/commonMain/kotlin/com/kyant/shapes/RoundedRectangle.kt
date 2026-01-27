@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.util.fastCoerceIn
 
 fun RoundedRectangle(
     cornerRadius: Float,
@@ -31,7 +32,10 @@ data class RoundedRectangle(
 ) : RoundedRectangularShape {
 
     override fun cornerRadii(size: Size, layoutDirection: LayoutDirection, density: Density): FloatArray {
-        val cornerRadiusPx = context(size, density) { cornerRadius.toPx() }
+        val cornerRadiusPx =
+            context(size, density) {
+                cornerRadius.toPx().fastCoerceIn(0f, size.minDimension * 0.5f)
+            }
         return FloatArray(4) { cornerRadiusPx }
     }
 
@@ -57,7 +61,10 @@ data class RoundedRectangle(
     }
 
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
-        val cornerRadiusPx = context(size, density) { cornerRadius.toPx() }
+        val cornerRadiusPx =
+            context(size, density) {
+                cornerRadius.toPx().fastCoerceIn(0f, size.minDimension * 0.5f)
+            }
 
         if (cornerRadiusPx <= 0f) {
             return Outline.Rectangle(
