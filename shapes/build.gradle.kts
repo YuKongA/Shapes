@@ -17,11 +17,7 @@ kotlin {
         }
     }
 
-    jvm("desktop") {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_25
-        }
-    }
+    jvm("desktop")
 
     js(IR) {
         browser()
@@ -49,7 +45,7 @@ mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
 
-    coordinates("io.github.kyant0", "shapes", "1.0.2")
+    coordinates("io.github.kyant0", "shapes", "1.0.3")
 
     pom {
         name.set("Shapes")
